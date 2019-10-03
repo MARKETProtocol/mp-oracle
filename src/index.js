@@ -8,6 +8,13 @@ import { wrapAsBigNumber } from './utils/wrapAsBigNumber.js';
 console.log('Configuring oracle...');
 
 const config = new Configuration();
+
+const { asset, network, settleOnBand, settleOnTime } = config;
+const oracleAddress = config.walletAddress;
+
+console.log('Configuration is', { asset, network, oracleAddress, settleOnBand, settleOnTime });
+
+
 const coincap = new Coincap(config);
 
 const contract = new ethers.Contract(config.marketContract, marketContract, config.wallet);
@@ -17,14 +24,17 @@ let decimals;
 let expiration;
 let floor;
 let isSettled;
+let startPid;
 let watcherPid;
 
 // Shutdown
 
 const shutdown = (reason = 'Contract already settled') => {
+  clearTimeout(startPid);
+  coincap.stop();
   console.log(reason);
   console.log('Goodbye!');
-  process.exit(0);
+  setTimeout(() => shutdown(reason), 1000000000);
 };
 
 const stopWatcher = () => {
@@ -42,23 +52,29 @@ const displayMetrics = () => {
     coincap.price.toFixed(),
     '\nCeiling:',
     ceiling.toFixed(),
+    '\nExpiration:',
+    expiration.toUTCString(),
+    '\nNow:',
+    (new Date).toUTCString(),
     '\n------------',
   );
 };
 
 const settle = async () => {
-  console.log('Settlement Triggered...');
+  if (!isSettled) {
+    console.log('Settlement Triggered...');
 
-  const overrides = {
-    gasLimit: 200000,
-    gasPrice: ethers.utils.parseUnits('30', 'gwei'),
-  };
+    const overrides = {
+      gasLimit: 200000,
+      gasPrice: ethers.utils.parseUnits('30', 'gwei'),
+    };
 
-  displayMetrics();
+    displayMetrics();
 
-  const price = coincap.price.multipliedBy(10 ** decimals);
+    const price = coincap.price.multipliedBy(10 ** decimals);
 
-  return contract.oracleCallback(price, overrides);
+    return contract.oracleCallBack(price.dp(0).toFixed(), overrides);
+  }
 };
 
 const watcher = async () => {
@@ -80,7 +96,7 @@ const watcher = async () => {
 // Initialization
 
 const initWatcher = () => {
-  watcherPid = setInterval(watcher, 100);
+  watcherPid = setInterval(watcher, 250);
 };
 
 const main = async () => {
@@ -92,6 +108,8 @@ const main = async () => {
     contract.PRICE_DECIMAL_PLACES(),
     contract.PRICE_FLOOR(),
   ]);
+
+  stopWatcher();
 
   let exp;
   let priceCap;
@@ -108,6 +126,7 @@ const main = async () => {
 
   if (isSettled) {
     shutdown();
+    return;
   }
 
   initWatcher();
@@ -115,4 +134,4 @@ const main = async () => {
 
 // Run Lola, Run
 
-setInterval(main, 30000);
+startPid = setInterval(main, 30000);

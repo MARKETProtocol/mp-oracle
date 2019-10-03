@@ -12,6 +12,7 @@ module.exports = {
     max_memory_restart: '1G',
     env: {
       ASSET: '[bitcoin|ethereum]',
+      NETWORK: 'homestead',
       NODE_ENV: 'development',
       PRIVATE_KEY: 'YOUR PRIVATE KEY',
       MARKET_CONTRACT: 'CONTRACT ADDRESS',

@@ -17,7 +17,7 @@ export class Coincap {
   }
 
   onClose() {
-    console.log('Coincap connection closed! Reconnecting...');
+    console.log('Coincap connection closed');
     setTimeout(() => { this.connect(); }, 1000);
   }
 
@@ -30,6 +30,11 @@ export class Coincap {
     } catch (e) {
       console.log('Unable to process message from Coincap:', data);
     }
+  }
+
+  stop() {
+    this.connect = () => {};
+    this.ws.close();
   }
 }
 

@@ -21,8 +21,9 @@ export class Configuration {
   constructor(overrides = {}) {
     this.asset = fetchConfig('ASSET');
     this.marketContract = fetchConfig('MARKET_CONTRACT', '', true);
+    this.network = fetchConfig('NETWORK', 'homestead');
     this.privateKey = fetchConfig('PRIVATE_KEY');
-    this.provider = overrides.provider || ethers.getDefaultProvider();
+    this.provider = overrides.provider || ethers.getDefaultProvider(this.network);
     this.settleOnBand = fetchConfig('SETTLE_ON_BAND', 'true') === 'true';
     this.settleOnTime = fetchConfig('SETTLE_ON_TIME', 'true') === 'true';
     this.wallet = new ethers.Wallet(this.privateKey, this.provider);

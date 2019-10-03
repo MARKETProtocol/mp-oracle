@@ -1,0 +1,22 @@
+module.exports = {
+  apps : [{
+    name: 'MP Oracle',
+    script: 'src/index.js',
+    interpreter: '/home/market/.nvm/versions/node/v12.10.0/bin/node',
+    interpreter_args: '-r esm',
+
+    // Options reference: https://pm2.io/doc/en/runtime/reference/ecosystem-file/
+    instances: 1,
+    autorestart: true,
+    watch: true,
+    max_memory_restart: '1G',
+    env: {
+      ASSET: '[bitcoin|ethereum]',
+      NODE_ENV: 'development',
+      PRIVATE_KEY: 'YOUR PRIVATE KEY',
+      MARKET_CONTRACT: 'CONTRACT ADDRESS',
+      SETTLE_ON_BAND: 'true',
+      SETTLE_ON_TIME: 'true'
+    }
+  }]
+};

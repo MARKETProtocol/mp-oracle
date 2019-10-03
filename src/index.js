@@ -86,7 +86,7 @@ const watcher = async () => {
     shutdown('Contract settled due to time breach');
   }
 
-  if (settleOnBand && (ceiling < coincap.price || floor > coincap.price)) {
+  if (settleOnBand && (ceiling.isLessThan(coincap.price) || floor.isGreaterThan(coincap.price))) {
     stopWatcher();
     await settle();
     shutdown('Contract settled due to band breach');

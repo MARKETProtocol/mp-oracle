@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
 
+import { apps } from '../ecosystem.config.js';
 import { Coincap } from './Coincap.js';
 import { Configuration } from './Configuration.js';
 import { marketContract } from './abi/marketContract.js';
@@ -7,7 +8,7 @@ import { wrapAsBigNumber } from './utils/wrapAsBigNumber.js';
 
 console.log('Configuring oracle...');
 
-const config = new Configuration();
+const config = new Configuration(apps[0].env);
 
 const { asset, network, settleOnBand, settleOnTime } = config;
 const oracleAddress = config.walletAddress;
@@ -55,7 +56,7 @@ const displayMetrics = () => {
     '\nExpiration:',
     expiration.toUTCString(),
     '\nNow:',
-    (new Date).toUTCString(),
+    (new Date()).toUTCString(),
     '\n------------',
   );
 };
@@ -73,13 +74,18 @@ const settle = async () => {
 
     const price = coincap.price.multipliedBy(10 ** decimals);
 
-    return contract.oracleCallBack(price.dp(0).toFixed(), overrides);
+    return new Promise((resolve) => {
+      setTimeout(async () => {
+        const result = await contract.oracleCallBack(price.dp(0).toFixed(), overrides);
+        resolve(result);
+      }, 2000);
+    });
   }
+
+  return true;
 };
 
 const watcher = async () => {
-  const { settleOnBand, settleOnTime } = config;
-
   if (settleOnTime && expiration < new Date()) {
     stopWatcher();
     await settle();

@@ -78,7 +78,7 @@ const settle = async () => {
       setTimeout(async () => {
         const result = await contract.oracleCallBack(price.dp(0).toFixed(), overrides);
         resolve(result);
-      }, 2000);
+      }, 30000);
     });
   }
 

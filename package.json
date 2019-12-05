@@ -29,6 +29,7 @@
     "start": "npm run lint && node -r esm src/index.js",
     "oracles": "node -r esm src/oracleAddresses.js",
     "pm2": "pm2 start ecosystem.config.js",
+    "tokens": "node -r esm src/positionTokenAddresses.js",
     "transfer": "node -r esm src/sendFunds.js",
     "wallet": "node -r esm src/createWallet.js"
   },

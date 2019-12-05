@@ -3,7 +3,6 @@ import { ethers } from 'ethers';
 import { apps } from '../ecosystem.config.js';
 import { Coincap } from './Coincap.js';
 import { Configuration } from './Configuration.js';
-import { marketContract } from './abi/marketContract.js';
 import { wrapAsBigNumber } from './utils/wrapAsBigNumber.js';
 
 console.log('Configuring oracle...');
@@ -18,7 +17,8 @@ console.log('Configuration is', { asset, network, oracleAddress, settleOnBand, s
 
 const coincap = new Coincap(config);
 
-const contract = new ethers.Contract(config.marketContract, marketContract, config.wallet);
+const contract = config.marketContract();
+console.log('contract', contract);
 
 let ceiling;
 let decimals;

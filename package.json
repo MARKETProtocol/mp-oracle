@@ -27,7 +27,9 @@
   "scripts": {
     "lint": "eslint src",
     "start": "npm run lint && node -r esm src/index.js",
+    "oracles": "node -r esm src/oracleAddresses.js",
     "pm2": "pm2 start ecosystem.config.js",
+    "transfer": "node -r esm src/sendFunds.js",
     "wallet": "node -r esm src/createWallet.js"
   },
   "dependencies": {

@@ -16,6 +16,7 @@ module.exports = {
       NODE_ENV: 'development',
       PRIVATE_KEY: 'YOUR PRIVATE KEY',
       MARKET_CONTRACT: 'CONTRACT ADDRESS',
+      RECEIVER: 'YOUR WALLET',
       SETTLE_ON_BAND: 'true',
       SETTLE_ON_TIME: 'true'
     }

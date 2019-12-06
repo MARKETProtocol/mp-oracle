@@ -22,10 +22,12 @@ const fetchConfig = (name, fallback, hex = false) => {
 export class Configuration {
   constructor(overrides = {}) {
     this.asset = fetchConfig('ASSET', overrides.ASSET);
+    this.collateralPoolAddress = '0x6217D5392f6B7b6B3a9b2512A2b0Ec4CBB14c448';
     this.contracts = fetchConfig('CONTRACTS', '').split(',');
     this.erc20Contracts = {};
     this.marketContractAddress = fetchConfig('MARKET_CONTRACT', overrides.MARKET_CONTRACT, true);
     this.marketContracts = {};
+    this.mktAddress = '0xba23485a04b897c957918fde2dabd4867838140b';
     this.network = fetchConfig('NETWORK', overrides.NETWORK || 'homestead');
     this.privateKey = fetchConfig('PRIVATE_KEY', overrides.PRIVATE_KEY);
     this.provider = overrides.provider || ethers.getDefaultProvider(this.network);
@@ -40,6 +42,7 @@ export class Configuration {
   get walletAddress() {
     return this.wallet.address.toLowerCase();
   }
+
 
   erc20Contract(address) {
     if (this.erc20Contracts[address]) {

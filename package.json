@@ -25,10 +25,11 @@
   },
   "main": "lib/index.js",
   "scripts": {
+    "approve": "node -r esm src/approve.js",
     "lint": "eslint src",
-    "start": "npm run lint && node -r esm src/index.js",
     "oracles": "node -r esm src/oracleAddresses.js",
     "pm2": "pm2 start ecosystem.config.js",
+    "start": "npm run lint && node -r esm src/index.js",
     "tokens": "node -r esm src/positionTokenAddresses.js",
     "transfer": "node -r esm src/sendFunds.js",
     "wallet": "node -r esm src/createWallet.js"

@@ -23,7 +23,7 @@ export class Configuration {
   constructor(overrides = {}) {
     this.asset = fetchConfig('ASSET', overrides.ASSET);
     this.collateralPoolAddress = '0x6217D5392f6B7b6B3a9b2512A2b0Ec4CBB14c448';
-    this.contracts = fetchConfig('CONTRACTS', '').split(',');
+    this.contracts = fetchConfig('CONTRACTS', overrides.CONTRACTS).split(',');
     this.erc20Contracts = {};
     this.marketContractAddress = fetchConfig('MARKET_CONTRACT', overrides.MARKET_CONTRACT, true);
     this.marketContracts = {};

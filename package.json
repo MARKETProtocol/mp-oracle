@@ -29,6 +29,7 @@
     "lint": "eslint src",
     "oracles": "node -r esm src/oracleAddresses.js",
     "pm2": "pm2 start ecosystem.config.js",
+    "settlement": "node -r esm src/settlementCheck.js",
     "start": "npm run lint && node -r esm src/index.js",
     "tokens": "node -r esm src/positionTokenAddresses.js",
     "transfer": "node -r esm src/sendFunds.js",

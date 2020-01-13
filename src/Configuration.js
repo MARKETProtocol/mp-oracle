@@ -34,6 +34,7 @@ export class Configuration {
     this.receiver = fetchConfig('RECEIVER', overrides.RECEIVER, true);
     this.settleOnBand = fetchConfig('SETTLE_ON_BAND', 'true') === 'true';
     this.settleOnTime = fetchConfig('SETTLE_ON_TIME', 'true') === 'true';
+    this.uniswapAddress = fetchConfig('UNISWAP_ADDRESS', overrides.UNISWAP_ADDRESS, true);
     this.wallet = new ethers.Wallet(this.privateKey, this.provider);
 
     this.signer = this.signer.bind(this);
@@ -42,7 +43,6 @@ export class Configuration {
   get walletAddress() {
     return this.wallet.address.toLowerCase();
   }
-
 
   erc20Contract(address) {
     if (this.erc20Contracts[address]) {

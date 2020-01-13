@@ -3,19 +3,27 @@ import { ethers } from 'ethers';
 import { apps } from '../ecosystem.config.js';
 import { Coincap } from './Coincap.js';
 import { Configuration } from './Configuration.js';
+import { Uniswap } from './Uniswap.js';
 import { wrapAsBigNumber } from './utils/wrapAsBigNumber.js';
 
 console.log('Configuring oracle...');
 
 const config = new Configuration(apps[0].env);
 
-const { asset, network, settleOnBand, settleOnTime } = config;
+const { asset, network, settleOnBand, settleOnTime, uniswapAddress } = config;
 const oracleAddress = config.walletAddress;
 
-console.log('Configuration is', { asset, network, oracleAddress, settleOnBand, settleOnTime });
-
+console.log('Configuration is', {
+  asset,
+  network,
+  oracleAddress,
+  settleOnBand,
+  settleOnTime,
+  uniswapAddress,
+});
 
 const coincap = new Coincap(config);
+const uniswap = new Uniswap(config, coincap);
 
 const contract = config.marketContract();
 console.log('contract', contract);
@@ -50,7 +58,7 @@ const displayMetrics = () => {
     '\nFloor:',
     floor.toFixed(),
     '\nPrice:',
-    coincap.price.toFixed(),
+    uniswap.price.toFixed(),
     '\nCeiling:',
     ceiling.toFixed(),
     '\nExpiration:',
@@ -72,7 +80,7 @@ const settle = async () => {
 
     displayMetrics();
 
-    const price = coincap.price.multipliedBy(10 ** decimals);
+    const price = uniswap.price.multipliedBy(10 ** decimals);
 
     return new Promise((resolve) => {
       setTimeout(async () => {
@@ -92,7 +100,7 @@ const watcher = async () => {
     shutdown('Contract settled due to time breach');
   }
 
-  if (settleOnBand && (ceiling.isLessThan(coincap.price) || floor.isGreaterThan(coincap.price))) {
+  if (settleOnBand && (ceiling.isLessThan(uniswap.price) || floor.isGreaterThan(uniswap.price))) {
     stopWatcher();
     await settle();
     shutdown('Contract settled due to band breach');
@@ -106,6 +114,8 @@ const initWatcher = () => {
 };
 
 const main = async () => {
+  uniswap.start();
+
   console.log('Fetching contract metadata...');
   const data = await Promise.all([
     contract.EXPIRATION(),

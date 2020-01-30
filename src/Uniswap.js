@@ -32,7 +32,7 @@ export class Uniswap {
 
   get price() {
     const { _lastPrice, coincap } = this;
-    return _lastPrice.dividedBy(coincap.price);
+    return BigNumber(1.0).dividedBy(_lastPrice.dividedBy(coincap.price));
   }
 
   async prep() {
@@ -62,10 +62,9 @@ export class Uniswap {
     const newPrice = new BigNumber(tokensForOneETH).dividedBy(10 ** tokenDecimals);
 
     if (!_lastPrice.isEqualTo(newPrice)) {
+      this._lastPrice = newPrice;
       console.log(`1 ETH on ${address} Uniswap Exchange gets you ${newPrice.toFixed()}`);
       console.log(`Price is ${this.price}`);
-
-      this._lastPrice = newPrice;
     }
   }
 }
